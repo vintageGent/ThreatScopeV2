@@ -1,0 +1,26 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+
+# IDE and editor directories
+.vscode/
+.idea/
+
+# Temporary scan files
+nmap_scan_results.xml
+
+# Generated reports
+*.html
+*.pdf
+*.txt
+*.csv
+*.json
+
+# OS-specific files
+.DS_Store
+Thumbs.db

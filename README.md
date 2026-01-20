@@ -1,105 +1,25 @@
-# ThreatScopeV2: A Focused Security Scanner
+# ThreatScope V2
 
-**ThreatScopeV2** is a command-line toolkit designed for security professionals and developers to perform targeted security scans. It provides a suite of modules for network discovery, vulnerability analysis, dependency checking, and secrets detection.
+Hey there, fellow seeker! I'm Mwithiga.
 
-This tool is built to be straightforward and extensible, providing clear, actionable results in multiple formats.
+My journey into technology has always been tied to a deep interest in cybersecurity—both the offensive (Red Team) and defensive (Blue Team) sides. I wanted to move beyond theory and build a practical tool that could help automate some of the reconnaissance and analysis tasks that security professionals perform.
 
-## Core Features
+Thus, **ThreatScope** was born. This project is my custom-built toolkit for security analysis. It's a command-line application designed to integrate various scanning and enumeration techniques into a single, cohesive framework. This is my personal project to both sharpen my Python skills and create something functional for my own security research.
 
-*   **Network Scanner (`netscan`):** Uses `nmap` to discover open ports and identify running services on a target host or network range.
-*   **Web Vulnerability Scanner (`vulnscan`):** Performs basic checks for common web vulnerabilities, including SQL Injection, Cross-Site Scripting (XSS), sensitive file exposure, and missing security headers.
-*   **Dependency Scanner (`dep_scan`):** Scans dependency files (like `requirements.txt`) for packages with known vulnerabilities by checking against the OSV (Open Source Vulnerability) database.
-*   **Secrets Scanner (`secret_scan`):** Scans files or directories for hardcoded secrets like API keys and private keys using a set of common regex patterns.
+## Features
 
-## Multi-Format Reporting
-
-ThreatScopeV2 provides clear and professional reports in several formats:
-
-*   **Console:** Immediate, color-coded output directly in your terminal.
-*   **HTML:** A clean, easy-to-read report file perfect for viewing in a browser.
-*   **PDF:** A portable, shareable PDF version of the report.
-*   **Advice File:** A simple text file containing easy-to-understand explanations of the findings and actionable remediation advice.
+- **Modular Design:** Easily extendable with new scanning modules.
+- **Command-Line Interface:** Built for efficiency and integration into automated workflows.
+- _(More features to be documented as the project evolves)_
 
 ## Getting Started
 
-### Prerequisites
+_(Setup and usage instructions will be added as the project matures.)_
 
-*   Python 3.x
-*   `nmap` must be installed and in your system's PATH for the `netscan` command to work.
+## The Development Journey
 
-### Installation
+The main challenge in building a tool like ThreatScope is not just writing the code, but architecting it in a way that is both powerful and easy to expand.
 
-The project includes a virtual environment (`venv`) with all necessary Python packages.
+My first version of this tool was a single, monolithic script. It worked, but it was difficult to add new features without breaking existing ones. For V2, I made a critical design decision to rebuild it from the ground up with a **modular architecture**.
 
-1.  **Navigate to the project directory:**
-    ```bash
-    cd ThreatScopeV2
-    ```
-
-2.  **Activate the virtual environment:**
-    *   On Linux/macOS:
-        ```bash
-        source venv/bin/activate
-        ```
-    *   On Windows:
-        ```bash
-        .\venv\Scripts\activate
-        ```
-
-## Usage
-
-All commands are run through the main `threatscope.py` script.
-
-**General Format:**
-```bash
-./threatscope.py <command> <target> [options]
-```
-
-**Reporting Flags (can be used with any command):**
-*   `--html <filename.html>`: Generate an HTML report.
-*   `--pdf <filename.pdf>`: Generate a PDF report.
-*   `--advice <filename.txt>`: Generate a text file with remediation advice.
-
-### `netscan`
-
-**Usage:**
-```bash
-./threatscope.py netscan <ip_or_hostname> [--ports <port1,port2>]
-```
-**Example:**
-```bash
-./threatscope.py netscan 127.0.0.1 --ports 80,443,8080 --pdf scan_report.pdf
-```
-
-### `vulnscan`
-
-**Usage:**
-```bash
-./threatscope.py vulnscan <url>
-```
-**Example:**
-```bash
-./threatscope.py vulnscan "http://example.com/page.php?id=1" --html vuln_report.html
-```
-
-### `dep_scan`
-
-**Usage:**
-```bash
-./threatscope.py dep_scan <path_to_file>
-```
-**Example:**
-```bash
-./threatscope.py dep_scan requirements.txt --advice advice.txt
-```
-
-### `secret_scan`
-
-**Usage:**
-```bash
-./threatscope.py secret_scan <file_or_directory_path>
-```
-**Example:**
-```bash
-./threatscope.py secret_scan . --html secrets.html --pdf secrets.pdf
-```
+Each piece of functionality—like subdomain enumeration, port scanning, or vulnerability analysis—is now designed as a separate "module." This was a significant challenge that forced me to think more deeply about object-oriented design and how to create clean interfaces between different parts of the application. While it was more work upfront, this modular approach means I can now add new scanning capabilities far more easily in the future. This project has been an incredible learning experience in building more mature and maintainable software.

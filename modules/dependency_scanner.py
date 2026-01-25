@@ -77,13 +77,14 @@ def scan_dependencies(file_path):
         vulns = query_osv_api(pkg['name'], pkg['version'])
 
         if vulns and 'vulns' in vulns:
+            processed_vulns = []
             for vuln in vulns['vulns']:
                 severity = "UNKNOWN"
                 # Try to find severity information
                 if 'database_specific' in vuln and 'severity' in vuln['database_specific']:
                     severity = vuln['database_specific']['severity']
                 
-                scan_results["vulnerabilities"].append({
+                processed_vulns.append({
                     "package_name": pkg['name'],
                     "version": pkg['version'],
                     "vuln_id": vuln['id'],
@@ -92,6 +93,36 @@ def scan_dependencies(file_path):
                     "aliases": vuln.get('aliases', []),
                     "severity": severity
                 })
+
+            # Deduplicate findings based on ID and aliases
+            unique_vulns = []
+            for new_v in processed_vulns:
+                new_ids = {new_v['vuln_id']} | set(new_v['aliases'])
+                merged = False
+                for ex_v in unique_vulns:
+                    ex_ids = {ex_v['vuln_id']} | set(ex_v['aliases'])
+                    # If there's an intersection in IDs/aliases, they refer to the same vuln
+                    if not new_ids.isdisjoint(ex_ids):
+                        # Merge: Keep the better severity/summary
+                        if ex_v['severity'] == "UNKNOWN" and new_v['severity'] != "UNKNOWN":
+                            ex_v['severity'] = new_v['severity']
+                        if ex_v['summary'] == "No summary available." and new_v['summary'] != "No summary available.":
+                            ex_v['summary'] = new_v['summary']
+                        
+                        # Merge aliases
+                        all_aliases = set(ex_v['aliases']) | set(new_v['aliases']) | {new_v['vuln_id']} | {ex_v['vuln_id']}
+                        # Remove the current ID from aliases list to avoid self-reference (optional but clean)
+                        if ex_v['vuln_id'] in all_aliases:
+                            all_aliases.remove(ex_v['vuln_id'])
+                        ex_v['aliases'] = list(all_aliases)
+                        
+                        merged = True
+                        break
+                
+                if not merged:
+                    unique_vulns.append(new_v)
+            
+            scan_results["vulnerabilities"].extend(unique_vulns)
     
     # Console reporting
     if not scan_results["vulnerabilities"]:

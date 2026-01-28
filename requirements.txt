@@ -1,2 +1,4 @@
 requests
 reportlab
+beautifulsoup4
+weasyprint
